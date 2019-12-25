@@ -72,7 +72,7 @@ extension Application {
     }
 
     // 1
-    func getResponse<C, T>(to path: String, method: HTTPMethod = .GET, headers: HTTPHeaders = .init(), data: C? = nil, decodeTo type: T.Type ) throws -> T where C: Content, T: Decodable {
+    func getResponse<C, T>(to path: String, method: HTTPMethod = .GET, headers: HTTPHeaders = .init(), data: C? = nil, decodeTo type: T.Type) throws -> T where C: Content, T: Decodable {
         // 2
         let response = try self.sendRequest(to: path,
                                             method: method,

@@ -10,3 +10,4 @@ public func app(_ env: Environment) throws -> Application {
     try boot(app)
     return app
 }
+

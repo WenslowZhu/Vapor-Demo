@@ -32,7 +32,7 @@ struct CategoriesController: RouteCollection {
     func getAcronymsHandler(_ req: Request) throws -> Future<[Acronym]> {
         return try req.parameters.next(Category.self)
             .flatMap(to: [Acronym].self) { category in
-                return try category.acronym.query(on: req).all()
+                return try category.acronyms.query(on: req).all()
         }
     }
 }

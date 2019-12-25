@@ -24,7 +24,7 @@ extension Category: Migration {}
 extension Category: Parameter {}
 
 extension Category {
-    var acronym: Siblings<Category, Acronym, AcronymCategoryPivot> {
+    var acronyms: Siblings<Category, Acronym, AcronymCategoryPivot> {
         return siblings()
     }
 }
