@@ -12,6 +12,9 @@ public func routes(_ router: Router) throws {
     let userController = UsersController()
     try router.register(collection: userController)
 
+    let categoriesController = CategoriesController()
+    try router.register(collection: categoriesController)
+
     // Basic "It works" example
     router.get { req in
         return "It works!"
