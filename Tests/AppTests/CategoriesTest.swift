@@ -34,7 +34,8 @@ final class CategoriesTest: XCTestCase {
         _ = try app.sendRequest(to: categoriesURI,
                                 method: .POST,
                                 headers: header,
-                                body: category)
+                                body: category,
+                                loggedInRequest: true)
 
         let result = try app.getResponse(to: categoriesURI,
                                          decodeTo: [App.Category].self)
@@ -57,7 +58,7 @@ final class CategoriesTest: XCTestCase {
         let category = try App.Category.create(on: conn)
         let acronymsURI = "/api/acronyms/"
 
-        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .POST)
+        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .POST,loggedInRequest: true)
 
         let result = try app.getResponse(to: "\(categoriesURI)\(category.id!)/acronyms",
             method: .GET,

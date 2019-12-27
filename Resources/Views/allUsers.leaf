@@ -1,24 +1,26 @@
 #set("content") {
-<h1>All Users</h1>
-#if(count(users) > 0) {
-<table class="table table-bordered table-hover">
-    <thead class="thead-light">
+
+  <h1>All Users</h1>
+
+  #if(count(users) > 0) {
+    <table class="table table-bordered table-hover">
+      <thead class="thead-light">
         <tr>
-            <th>             Username           </th>
-            <th>             Name           </th>
+          <th>Username</th><th>Name</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         #for(user in users) {
-        <tr>
+          <tr>
             <td><a href="/users/#(user.id)">#(user.username)</a></td>
             <td>#(user.name)</td>
-        </tr>
+          </tr>
         }
-    </tbody>
-</table>
-} else {
-<h2>There aren't any users yet!</h2>
+      </tbody>
+    </table>
+  } else {
+    <h2>There aren't any users yet!</h2>
+  }
 }
-}
+
 #embed("base")

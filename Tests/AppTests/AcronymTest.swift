@@ -46,22 +46,15 @@ final class AcronymTest: XCTestCase {
     }
 
     func testAcronymCanBeSavedWithAPI() throws {
-        let user = try User.create(name: "123",
-                                   username: "456",
-                                   on: conn)
-        let acronym = Acronym(short: acronymShort,
-                              long: acronymLong,
-                              userID: user.id!)
+        let user = try User.create(on: conn)
+        let acronym = Acronym(short: acronymShort, long: acronymLong, userID: user.id!)
+        let receivedAcronym = try app.getResponse(to: acronymsURI, method: .POST,
+                                                  headers: header, data: acronym,
+                                                  decodeTo: Acronym.self, loggedInRequest: true)
 
-        let receivedAcronym = try app.getResponse(to: acronymsURI,
-                                                  method: .POST,
-                                                  headers: header,
-                                                  data: acronym,
-                                                  decodeTo: Acronym.self)
-
-        XCTAssertEqual(receivedAcronym.short, acronym.short)
-        XCTAssertEqual(receivedAcronym.long, acronym.long)
-        XCTAssertEqual(receivedAcronym.userID, user.id)
+        XCTAssertEqual(receivedAcronym.short, acronymShort)
+        XCTAssertEqual(receivedAcronym.long, acronymLong)
+        XCTAssertNotNil(receivedAcronym.id)
     }
 
     func testGettingASingleAcronymFromTheAPI() throws {
@@ -97,7 +90,8 @@ final class AcronymTest: XCTestCase {
                                                 method: .PUT,
                                                 headers: header,
                                                 data: acronym2,
-                                                decodeTo: Acronym.self)
+                                                decodeTo: Acronym.self,
+                                                loggedInUser: user)
 
         XCTAssertEqual(updatedAcronym.short, acronym2.short)
         XCTAssertEqual(updatedAcronym.long, acronym2.long)
@@ -107,12 +101,15 @@ final class AcronymTest: XCTestCase {
     func testDeleteAPI() throws {
         let acronym = try Acronym.create(on: conn)
 
-        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)", method: .DELETE)
+        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)",
+            method: .DELETE,
+            loggedInRequest: true)
 
         let acronyms = try app.getResponse(to: acronymsURI,
                                            method: .GET,
                                            headers: header,
-                                           decodeTo: [Acronym].self)
+                                           decodeTo: [Acronym].self,
+                                           loggedInRequest: true)
 
         XCTAssertEqual(acronyms.count, 0)
     }
@@ -171,7 +168,7 @@ final class AcronymTest: XCTestCase {
         let result = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/user",
             method: .GET,
             headers: header,
-            decodeTo: User.self)
+            decodeTo: User.Public.self)
 
         XCTAssertEqual(result.id!, user.id!)
     }
@@ -180,7 +177,9 @@ final class AcronymTest: XCTestCase {
         let acronym = try Acronym.create(on: conn)
         let category = try App.Category.create(on: conn)
 
-        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .POST)
+        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)",
+                                method: .POST,
+                                loggedInRequest: true)
 
         let result = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/categories",
             method: .GET,
@@ -195,9 +194,11 @@ final class AcronymTest: XCTestCase {
         let acronym = try Acronym.create(on: conn)
         let category = try App.Category.create(on: conn)
 
-        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .POST)
+        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)",                         method: .POST,
+                                loggedInRequest: true)
 
-        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .DELETE)
+        _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)",                         method: .DELETE,
+                                loggedInRequest: true)
 
         let result = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/categories",
             method: .GET,
