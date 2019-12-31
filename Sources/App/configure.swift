@@ -20,6 +20,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     // 文件存储
     middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
+    middlewares.use(SessionsMiddleware.self)
     services.register(middlewares)
 
     // 配置测试数据库环境
@@ -64,4 +65,5 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(commandConfig)
 
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
 }
